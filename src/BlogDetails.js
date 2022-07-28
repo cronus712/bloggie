@@ -1,5 +1,8 @@
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useFetch from "./useFetch";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 const BlogDetails = () => {
   const { id } = useParams();
@@ -14,10 +17,28 @@ const BlogDetails = () => {
       method: "DELETE",
     }).then(() => {
       navigate("/");
+      alert("Blog deleted !");
     });
   };
 
   const navigate = useNavigate();
+
+  const submit = () => {
+    confirmAlert({
+      title: "Confirm delete",
+      message: "Are you sure you want to delete this blog ?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => handleDelete(),
+        },
+        {
+          label: "No",
+          onClick: () => navigate("/"),
+        },
+      ],
+    });
+  };
 
   return (
     <div className="blog-details">
@@ -28,7 +49,7 @@ const BlogDetails = () => {
           <h2>{blog.title}</h2>
           <p>Written by {blog.author}</p>
           <div>{blog.body}</div>
-          <button onClick={handleDelete}>Delete</button>
+          <button onClick={submit}>Delete</button>
         </article>
       )}
     </div>
